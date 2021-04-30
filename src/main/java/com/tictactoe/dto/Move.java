@@ -47,7 +47,7 @@ public class Move {
 		 if(moves.size()>9) {
 			throw new MyException("Exceeded the possible moves!Total number of moves cannot exceed 9");
 		}
-		 if((cellnum<=0) || (cellnum>9)) {
+		 if((cellnum<=0) | (cellnum>9)) {
 			 throw new MyException("Invalid Cell number. Enter a valid number.");
 		 }
 		 

@@ -1,9 +1,11 @@
 package com.tictactoe;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
@@ -22,11 +24,12 @@ import com.tictactoe.service.MoveService;
 import org.junit.jupiter.api.Assertions;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
 class ApplicationTests {
 
-	private Player playerFirst = new Player("XXX", PlayerType.X);
-	private Player playerSecond = new Player("OOO", PlayerType.O);
+	private Player playerFirst = new Player(PlayerType.X);
+	private Player playerSecond = new Player(PlayerType.O);
 	private Integer validInput = 3;
 	private Integer invalidInputOne = 15;
 	private Integer invalidInputTwo = 0;
@@ -38,6 +41,11 @@ class ApplicationTests {
 	@Autowired
 	GameService gameService;
 	
+	@BeforeEach
+    public void setUp(){
+        this.game = new Game();
+        this.gameService.save(game);
+    }
 	
 	/*
 	 * Check for alternate plays
@@ -106,7 +114,7 @@ class ApplicationTests {
 		this.addMove(this.game,this.playerSecond,4);
 		this.addMove(this.game,this.playerFirst,6);
 		
-		Assert.isTrue(!(GameStatusType.Over).equals(game.getGameStatus().getStatusType()),"Status must not be over");
+		//Assert.isTrue(!(GameStatusType.Over).equals(game.getGameStatus().getStatusType()),"Status must not be over");
 
 		Assert.isTrue(GameStatusType.Draw.equals(game.getGameStatus().getStatusType()),"Status must be Draw");
 		
@@ -123,12 +131,12 @@ class ApplicationTests {
 		this.addMove(this.game,this.playerSecond,2);
 		this.addMove(this.game,this.playerFirst,6);
 		
-		Assert.isTrue(!(GameStatusType.Draw).equals(game.getGameStatus().getStatusType()), "Status must not be draw!");
+	//	Assert.isTrue(!(GameStatusType.Draw).equals(game.getGameStatus().getStatusType()), "Status must not be draw!");
 		Assert.isTrue(GameStatusType.Over.equals(game.getGameStatus().getStatusType()), "Status must be Gameover");
 	}
 	
 	
-	private Move addMove(Game game, Player player, Integer number) throws Exception{
+	private Move addMove(Game game, Player player, Integer number) throws MyException{
 		Move move = new Move(game,player, number);
 		this.moveService.save(move);
 		game.addMove(move);
