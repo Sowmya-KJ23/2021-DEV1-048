@@ -35,7 +35,34 @@ public class Game {
 	}
 	
 	public Game() {
-		super();
-		
+		super();	
+	}
+	
+	public Board getBoard() {
+		return new Board(this);
+	}
+	
+	public void addMove(Move move) {
+		this.getMoves().add(move);
+		this.updateStatus(move);
+	}
+	
+	private void updateStatus(Move move) {
+		Board board = this.getBoard();
+		PlayerType type = move.getPlayerType();
+		if(playerWin(board,type))
+			return;
+		checkBoardIsFull(board);
+	}
+	
+	private boolean playerWin(Board board, PlayerType type) {
+		this.setGameStatus(new GameStatus(GameStatusType.Over,type));
+		return true;
+	}
+	
+	private void checkBoardIsFull(Board board) {
+		if(board.isFull()) {
+			this.setGameStatus(new GameStatus(GameStatusType.Draw,null));
+		}
 	}
 }

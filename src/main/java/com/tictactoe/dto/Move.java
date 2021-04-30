@@ -11,7 +11,7 @@ public class Move {
 	
 	private Integer cellnumber;
 	
-	private Player playerType;
+	private PlayerType playerType;
 	
 	private Boolean active = true;
 	
@@ -59,11 +59,11 @@ public class Move {
 		this.cellnumber = cellnumber;
 	}
 
-	public Player getPlayerType() {
+	public PlayerType getPlayerType() {
 		return playerType;
 	}
 
-	public void setPlayerType(Player playerType) {
+	public void setPlayerType(PlayerType playerType) {
 		this.playerType = playerType;
 	}
 
