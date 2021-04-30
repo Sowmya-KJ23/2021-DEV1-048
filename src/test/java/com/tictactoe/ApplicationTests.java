@@ -38,6 +38,10 @@ class ApplicationTests {
 	@Autowired
 	GameService gameService;
 	
+	
+	/*
+	 * Check for alternate plays
+	 */	
 	@Test
 	public void testPlayerAlter() throws Exception{
 		Assertions.assertThrows(MyException.class, () ->{
@@ -46,6 +50,9 @@ class ApplicationTests {
 		});
 	}
 	
+	/*
+	 * check for player X starts first
+	 */
 	@Test
 	public void testPlayer() throws Exception{
 		Assertions.assertThrows(MyException.class, () -> {
@@ -53,6 +60,9 @@ class ApplicationTests {
 		});
 	}
 	
+	/*
+	 * Check the input cell number is not greater than 9
+	 */
 	@Test
 	public void testInvalidInputGreaterThan() throws Exception{
 		Assertions.assertThrows(MyException.class, () -> {
@@ -60,6 +70,9 @@ class ApplicationTests {
 		});
 	}
 	
+	/*
+	 * check for input cell number less than 1
+	 */
 	@Test
 	public void testInvalidInputLesserThan() throws Exception{
 		Assertions.assertThrows(MyException.class, () -> {
@@ -67,6 +80,9 @@ class ApplicationTests {
 		});
 	}
 	
+	/*
+	 * check for not placing the input on the non empty slot 
+	 */
 	@Test
 	public void testPlayedCellNotEmpty() throws Exception{
 		Assertions.assertThrows(MyException.class, () -> {
@@ -75,6 +91,9 @@ class ApplicationTests {
 		});
 	}
 	
+	/*
+	 * check for game draw
+	 */
 	@Test
 	public void testDraw() throws Exception{
 		this.addMove(this.game,this.playerFirst,1);
@@ -87,10 +106,15 @@ class ApplicationTests {
 		this.addMove(this.game,this.playerSecond,4);
 		this.addMove(this.game,this.playerFirst,6);
 		
+		Assert.isTrue(!(GameStatusType.Over).equals(game.getGameStatus().getStatusType()),"Status must not be over");
+
 		Assert.isTrue(GameStatusType.Draw.equals(game.getGameStatus().getStatusType()),"Status must be Draw");
 		
 	}
 
+	/*
+	 * check for game over
+	 */
 	@Test
 	public void testGameOver() throws Exception{
 		this.addMove(this.game,this.playerFirst,5);
@@ -99,8 +123,10 @@ class ApplicationTests {
 		this.addMove(this.game,this.playerSecond,2);
 		this.addMove(this.game,this.playerFirst,6);
 		
+		Assert.isTrue(!(GameStatusType.Draw).equals(game.getGameStatus().getStatusType()), "Status must not be draw!");
 		Assert.isTrue(GameStatusType.Over.equals(game.getGameStatus().getStatusType()), "Status must be Gameover");
 	}
+	
 	
 	private Move addMove(Game game, Player player, Integer number) throws Exception{
 		Move move = new Move(game,player, number);

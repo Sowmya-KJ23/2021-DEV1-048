@@ -2,13 +2,25 @@ package com.tictactoe.dto;
 
 import java.util.*;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name="game")
 public class Game {
 
-	
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqgame")
+    @SequenceGenerator(name = "seqgame", sequenceName = "gameidseq", allocationSize = 1)
 	private Long id;
+	
+	@Embedded
 	private GameStatus gameStatus;
+	
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "game")
 	private List<Move> moves;
+	
 	private Boolean active = true;
+	
 	public Long getId() {
 		return id;
 	}
@@ -47,7 +59,7 @@ public class Game {
 		this.updateStatus(move);
 	}
 	
-	private void updateStatus(Move move) {
+	public void updateStatus(Move move) {
 		Board board = this.getBoard();
 		PlayerType type = move.getPlayerType();
 		if(playerWin(board,type))
@@ -55,14 +67,36 @@ public class Game {
 		checkBoardIsFull(board);
 	}
 	
-	private boolean playerWin(Board board, PlayerType type) {
+	public boolean playerWin(Board board, PlayerType type) {
 		this.setGameStatus(new GameStatus(GameStatusType.Over,type));
 		return true;
 	}
 	
-	private void checkBoardIsFull(Board board) {
+	public void checkBoardIsFull(Board board) {
 		if(board.isFull()) {
 			this.setGameStatus(new GameStatus(GameStatusType.Draw,null));
 		}
+	}
+	
+	@Transient
+	public Move getLastMove() {
+		List<Move> moves = this.getMoves();
+        return moves.get(moves.size() - 1);
+		
+	}
+	
+	@Transient
+	public PlayerType getLastMovePlayerType() {
+		try {
+			return this.getLastMove().getPlayerType();
+		}
+		catch(NullPointerException e) {
+			return null;
+		}
+	}
+	public boolean cellIsEmpty(Integer num) {
+		Board board = this.getBoard();
+		Cell cell = board.getCells()[num-1];
+		return cell.isEmpty();
 	}
 }
