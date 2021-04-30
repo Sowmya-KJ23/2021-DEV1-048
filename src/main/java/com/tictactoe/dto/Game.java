@@ -16,7 +16,7 @@ public class Game {
 	@Embedded
 	private GameStatus gameStatus;
 	
-	@OneToMany(cascade = CascadeType.ALL,mappedBy = "game")
+	@OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL,orphanRemoval = true,mappedBy = "game")
 	private List<Move> moves;
 	
 	private Boolean active = true;
@@ -47,8 +47,11 @@ public class Game {
 	}
 	
 	public Game() {
-		super();	
+		super();
+		this.setMoves(new ArrayList<>());
+		this.setGameStatus(new GameStatus());
 	}
+	
 	
 	public Board getBoard() {
 		return new Board(this);
@@ -62,14 +65,21 @@ public class Game {
 	public void updateStatus(Move move) {
 		Board board = this.getBoard();
 		PlayerType type = move.getPlayerType();
-		if(playerWin(board,type))
-			return;
+		
+		
+		 if(playerWin(board,type)) 
+			 return;
+		 
 		checkBoardIsFull(board);
 	}
 	
 	public boolean playerWin(Board board, PlayerType type) {
-		this.setGameStatus(new GameStatus(GameStatusType.Over,type));
-		return true;
+		int win = board.getWinner(type);
+		if(win>0) {
+			this.setGameStatus(new GameStatus(GameStatusType.Over,type));
+			return true;
+		}
+		return false;
 	}
 	
 	public void checkBoardIsFull(Board board) {

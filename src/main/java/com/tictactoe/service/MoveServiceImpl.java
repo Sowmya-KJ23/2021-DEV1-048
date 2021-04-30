@@ -28,7 +28,7 @@ public class MoveServiceImpl implements MoveService{
 	public Optional<Move> load(Long id){
 		return this.repository.findById(id);
 	}
-	public Move save(Move move) throws MyException{
+	public Move save(Move move) throws Exception{
 		Optional<Game> optional = this.gameService.load(move.getGame().getId());
 		if(optional.isPresent()) {
 			Game game = optional.get();

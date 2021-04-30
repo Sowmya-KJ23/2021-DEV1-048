@@ -18,6 +18,7 @@ import com.tictactoe.exception.InvalidInputException;
 import com.tictactoe.exception.InvalidPlayerException;
 import com.tictactoe.exception.InvalidPlayerOrderException;
 import com.tictactoe.exception.MyException;
+import com.tictactoe.exception.NotEmptyException;
 import com.tictactoe.service.GameService;
 import com.tictactoe.service.MoveService;
 
@@ -93,7 +94,7 @@ class ApplicationTests {
 	 */
 	@Test
 	public void testPlayedCellNotEmpty() throws Exception{
-		Assertions.assertThrows(MyException.class, () -> {
+		Assertions.assertThrows(NotEmptyException.class, () -> {
 			this.addMove(this.game,this.playerFirst,5);
 			this.addMove(this.game,this.playerSecond,5);
 		});
@@ -104,15 +105,16 @@ class ApplicationTests {
 	 */
 	@Test
 	public void testDraw() throws Exception{
-		this.addMove(this.game,this.playerFirst,1);
-		this.addMove(this.game,this.playerSecond,2);
-		this.addMove(this.game,this.playerFirst,5);
-		this.addMove(this.game,this.playerSecond,9);
-		this.addMove(this.game,this.playerFirst,3);
-		this.addMove(this.game,this.playerSecond,7);
-		this.addMove(this.game,this.playerFirst,8);
-		this.addMove(this.game,this.playerSecond,4);
-		this.addMove(this.game,this.playerFirst,6);
+		
+		this.addMove(this.game, this.playerFirst, 5);
+        this.addMove(this.game, this.playerSecond, 1);
+        this.addMove(this.game, this.playerFirst, 3);
+        this.addMove(this.game, this.playerSecond, 7);
+        this.addMove(this.game, this.playerFirst, 9);
+        this.addMove(this.game, this.playerSecond, 6);
+        this.addMove(this.game, this.playerFirst, 2);
+        this.addMove(this.game, this.playerSecond, 8);
+        this.addMove(this.game, this.playerFirst, 4);
 		
 		//Assert.isTrue(!(GameStatusType.Over).equals(game.getGameStatus().getStatusType()),"Status must not be over");
 
@@ -125,18 +127,18 @@ class ApplicationTests {
 	 */
 	@Test
 	public void testGameOver() throws Exception{
-		this.addMove(this.game,this.playerFirst,5);
-		this.addMove(this.game,this.playerSecond,1);
-		this.addMove(this.game,this.playerFirst,4);
+		this.addMove(this.game,this.playerFirst,1);
 		this.addMove(this.game,this.playerSecond,2);
-		this.addMove(this.game,this.playerFirst,6);
+		this.addMove(this.game,this.playerFirst,4);
+		this.addMove(this.game,this.playerSecond,5);
+		this.addMove(this.game,this.playerFirst,7);
 		
 	//	Assert.isTrue(!(GameStatusType.Draw).equals(game.getGameStatus().getStatusType()), "Status must not be draw!");
 		Assert.isTrue(GameStatusType.Over.equals(game.getGameStatus().getStatusType()), "Status must be Gameover");
 	}
 	
 	
-	private Move addMove(Game game, Player player, Integer number) throws MyException{
+	private Move addMove(Game game, Player player, Integer number) throws Exception{
 		Move move = new Move(game,player, number);
 		this.moveService.save(move);
 		game.addMove(move);

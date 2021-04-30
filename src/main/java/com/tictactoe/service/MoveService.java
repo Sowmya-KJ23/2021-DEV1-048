@@ -8,6 +8,6 @@ import com.tictactoe.exception.MyException;
 public interface MoveService {
 
 	Iterable<Move> list();
-	Move save(Move move) throws MyException;
+	Move save(Move move) throws Exception;
 	Optional<Move> load(long id);
 }

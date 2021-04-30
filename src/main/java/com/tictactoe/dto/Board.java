@@ -3,26 +3,26 @@ package com.tictactoe.dto;
 import java.util.Arrays;
 
 public class Board {
-	
-	public static int boardSize=9;
-	
+
+	public static int boardSize = 9;
+
 	Cell[] cells;
-	
+
 	public Board() {
 		super();
 		this.setCells(new Cell[boardSize]);
-		for(int i=0;i<boardSize;i++) {
-			this.getCells()[i] = new Cell(i+1,null);
+		for (int i = 0; i < boardSize; i++) {
+			this.getCells()[i] = new Cell(i + 1, null);
 		}
 	}
-	
+
 	public Board(Game game) {
 		this();
-		game.getMoves().forEach(move ->{
-			this.cells[move.getCellnumber()-1].setType(move.getPlayerType());
+		game.getMoves().forEach(move -> {
+			this.cells[move.getCellnumber() - 1].setType(move.getPlayerType());
 		});
 	}
-	
+
 	public Cell[] getCells() {
 		return cells;
 	}
@@ -34,8 +34,10 @@ public class Board {
 	public boolean isFull() {
 		return Arrays.stream(this.cells).anyMatch(Cell::isNotEmpty);
 	}
-	
-	private int getWinner(PlayerType type) {
+
+	public int getWinner(PlayerType type) {
+		
+		
 		for(int y = 0; y < 3; y++){
             boolean winning = true;
             for(int x=0; x < 3; x++){
@@ -60,7 +62,8 @@ public class Board {
 	            if(!type.equals(this.getCells()[(i * 3) + i].getType())){
 	                return 0;
 	            }
-	        }
+	      }
            return 0;
+		
 	}
 }

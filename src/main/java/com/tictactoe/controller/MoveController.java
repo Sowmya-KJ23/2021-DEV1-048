@@ -41,7 +41,7 @@ public class MoveController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping()
-    public Move create(@RequestBody Move entity) throws MyException {
+    public Move create(@RequestBody Move entity) throws Exception {
         return this.service.save(entity);
     }
 

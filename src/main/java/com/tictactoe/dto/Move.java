@@ -5,6 +5,7 @@ import java.util.*;
 import javax.persistence.*;
 
 import com.tictactoe.exception.MyException;
+import com.tictactoe.exception.NotEmptyException;
 
 @Entity
 @Table(name = "move")
@@ -18,7 +19,7 @@ public class Move {
 	@SequenceGenerator(name = "seq", sequenceName = "seqid", allocationSize = 1)
 	private Long id;
 	
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	private Game game;
 	
 	private Integer cellnumber;
@@ -32,7 +33,7 @@ public class Move {
 		super();
 	}
 	
-	public Move(Game game, Player player, Integer cellnum) throws MyException {
+	public Move(Game game, Player player, Integer cellnum) throws NotEmptyException,MyException {
 		this.game = game;
 		this.playerType = player.getType();
 		this.cellnumber = cellnum;
@@ -44,17 +45,19 @@ public class Move {
 	
 	private void checkCellNumber(Game game,Integer cellnum) throws MyException {
 		List<Move> moves = game.getMoves();
-		 if(moves.size()>9) {
-			throw new MyException("Exceeded the possible moves!Total number of moves cannot exceed 9");
-		}
-		 if((cellnum<=0) | (cellnum>9)) {
+		/*
+		 * if(moves.size()>9) { throw new
+		 * MyException("Exceeded the possible moves!Total number of moves cannot exceed 9"
+		 * ); }
+		 */
+		 if((cellnum<=0) || (cellnum>9)) {
 			 throw new MyException("Invalid Cell number. Enter a valid number.");
 		 }
 		 
 	}
-	private void checkEmptyCell(Game game, Integer cellnum) throws MyException {
+	private void checkEmptyCell(Game game, Integer cellnum) throws NotEmptyException {
 		if(!game.cellIsEmpty(cellnum))
-			throw new MyException("Invalid Cell: "+cellnum+ ". Entered cell is not empty.");
+			throw new NotEmptyException("Invalid Cell: "+cellnum+ ". Entered cell is not empty.");
 	}
 	
 	private void checkPlayer(Game game, Player player) throws MyException {
